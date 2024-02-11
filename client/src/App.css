@@ -136,14 +136,10 @@ form {
 
 .sigCanvas {
   border: 1px solid black;
-  width: 300px;
+  width: 350px;
   height: 100px;
 }
 
 .dropdown {
   width: 200px;
-}
-
-.footerName {
-  width: 50% !important;
 }

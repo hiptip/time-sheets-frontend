@@ -6,12 +6,30 @@ import { TextField, Button, Container, Stack, Date, TextareaAutosize, Select, Me
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import SignatureCanvas from 'react-signature-canvas'
+
+
+const LoadingScreen = () => {
+  return (
+    <div>
+      <h1>Loading...</h1>
+    </div>
+  )
+}
+
+const SubmittedScreen = () => {
+  return (
+    <div>
+      <h1>Form Submitted</h1>
+    </div>
+  )
+}
 
 
 const handleEmployeeChange = (e, id, employees, setFormData) => {
@@ -31,6 +49,24 @@ const handleEmployeeChange = (e, id, employees, setFormData) => {
     employees: newEmployees,
   }));
 };
+
+const handleEmployeeTimeChange = (time, id, column, employees, setFormData) => {
+  //convert time to string of form HH:MM AM/PM
+  time = time.format('hh:mm A');
+  const newEmployees = employees.map((employee) => {
+    if (employee.id === id) {
+      return {
+        ...employee,
+        [column]: time,
+      };
+    }
+    return employee;
+  });
+  setFormData((prevFormData) => ({
+    ...prevFormData,
+    employees: newEmployees,
+  }));
+}
 
 const handleEquipmentChange = (e, id, equipment, setFormData) => {
   e.preventDefault();
@@ -73,7 +109,7 @@ const CustomTableCellTime = ({ id, column, employees, setFormData }) => {
   const employee = employees.find((employee) => employee.id === id);
   return (
     <TableCell>
-      <TextField
+      {/* <TextField
         type="time"
         vairant="outlined"
         color="secondary"
@@ -82,7 +118,31 @@ const CustomTableCellTime = ({ id, column, employees, setFormData }) => {
         onChange={(e) => handleEmployeeChange(e, employee.id, employees, setFormData)}
         fullWidth
         style={{ width: '135px' }}
-      />
+      /> */}
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <TimePicker
+          label="time"
+          value={employee[column]}
+          color="secondary"
+          onChange={(e) => handleEmployeeTimeChange(e, employee.id, column, employees, setFormData)}
+          slotProps={{
+            textField: {
+              error: false,
+              // make wider
+              style: { width: '130px' }
+            },
+          className: 'employeeTime'
+          }}
+          // renderInput={(params) => (
+          //   <TextField
+          //     {...params}
+          //     variant="outlined"
+          //     fullWidth
+          //     style={{ width: '135px' }}
+          //   />
+          // )}
+        />
+      </LocalizationProvider>
     </TableCell>
   )
 }
@@ -261,6 +321,8 @@ const EquipmentRow = ({ equipment, allEquipment, setFormData }) => {
 const App = () => {
   const clientSig = useRef();
   const supervisorSig = useRef();
+  const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     teamLead: "",
     teamLeadNumber: "",
@@ -326,6 +388,7 @@ const App = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true)
     // console.log(JSON.stringify(formData));
     // update state to have date be of the form MM-DD-YYYY
     const date = formData.date;
@@ -340,20 +403,24 @@ const App = () => {
       ...prevFormData,
       day,
     }));
-    // console.log(formData)
+    console.log(formData)
 
     // send to local api at port 3001
     // fetch('https://7ctna56fk6.execute-api.us-east-1.amazonaws.com/prod/', {
-    fetch('https://7ctna56fk6.execute-api.us-east-1.amazonaws.com/prod/process', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData)
-    })
-      .then((res) => res.json())
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err))
+    // fetch('https://7ctna56fk6.execute-api.us-east-1.amazonaws.com/prod/process', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify(formData)
+    // })
+    //   .then((res) => res.json())
+    //   .then((data) => console.log(data))
+    //   .catch((err) => console.log(err))
+    //   .finally(() => {
+    //     setLoading(false)
+    //     setSubmitted(true)
+    //   })
   };
 
   const handleSignatureEnd = (sigRef) => {
@@ -367,6 +434,7 @@ const App = () => {
   }
 
   return (
+    loading ? <LoadingScreen /> : submitted ? <SubmittedScreen /> :
     <form onSubmit={handleSubmit}>
       <header>
         {/* <img src="logo.png" alt="My logo" class="logo" />
@@ -433,6 +501,8 @@ const App = () => {
                 label="Date Work Performed"
                 value={formData.date}
                 onChange={(newValue) => {
+                  // convert newValue to string of form MM-DD-YYYY
+                  newValue = newValue.format('MM-DD-YYYY');
                   setFormData((prevFormData) => ({
                     ...prevFormData,
                     date: newValue,
@@ -529,10 +599,11 @@ const App = () => {
             />
             <SignatureCanvas
               penColor='black'
-              canvasProps={{ width: 200, height: 100, className: 'sigCanvas' }}
+              canvasProps={{ width: 350, height: 100, className: 'sigCanvas' }}
               ref={clientSig}
               onEnd={handleSignatureEnd(clientSig)}
             />
+            <Button onClick={() => clientSig.current.clear()}>Clear Signature</Button>
           </div>
           <div id='supervisor'>
             <TextField
@@ -549,10 +620,11 @@ const App = () => {
             />
             <SignatureCanvas
               penColor='black'
-              canvasProps={{ width: 200, height: 100, className: 'sigCanvas' }}
+              canvasProps={{ width: 350, height: 100, className: 'sigCanvas' }}
               ref={supervisorSig}
               onEnd={handleSignatureEnd(supervisorSig)}
             />
+            <Button onClick={() => supervisorSig.current.clear()}>Clear Signature</Button>
           </div>
         </section>
         <section className="submit">
