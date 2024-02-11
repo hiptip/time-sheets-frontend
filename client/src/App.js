@@ -131,8 +131,11 @@ const CustomTableCellTime = ({ id, column, employees, setFormData }) => {
               // make wider
               style: { width: '130px' }
             },
-          className: 'employeeTime'
           }}
+          // disable all minutes except 00, 15, 30, 45
+          minutesStep={15}
+
+
           // renderInput={(params) => (
           //   <TextField
           //     {...params}
