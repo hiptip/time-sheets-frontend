@@ -403,24 +403,23 @@ const App = () => {
       ...prevFormData,
       day,
     }));
-    console.log(formData)
 
     // send to local api at port 3001
     // fetch('https://7ctna56fk6.execute-api.us-east-1.amazonaws.com/prod/', {
-    // fetch('https://7ctna56fk6.execute-api.us-east-1.amazonaws.com/prod/process', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify(formData)
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => console.log(data))
-    //   .catch((err) => console.log(err))
-    //   .finally(() => {
-    //     setLoading(false)
-    //     setSubmitted(true)
-    //   })
+    fetch('https://7ctna56fk6.execute-api.us-east-1.amazonaws.com/prod/process', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setLoading(false)
+        setSubmitted(true)
+      })
   };
 
   const handleSignatureEnd = (sigRef) => {
