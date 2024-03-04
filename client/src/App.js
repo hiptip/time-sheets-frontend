@@ -261,6 +261,7 @@ const EquipmentRow = ({ equipment, allEquipment, setFormData }) => {
       >
         <MenuItem value={'Arrow Board'}>Arrow Board</MenuItem>
         <MenuItem value={'Light Tower'}>Light Tower</MenuItem>
+        <MenuItem value={'AFAD'}>AFAD</MenuItem>
         <MenuItem value={'Other'}>Other</MenuItem>
       </TextField>
       {equipment.equipment === 'Other' && <TextField
@@ -336,6 +337,8 @@ const App = () => {
     license: "",
     job: "",
     maximo: "",
+    clientCompany: "",
+    otherClientCompany: "",
     equipment: [
       {
         id: 0,
@@ -447,6 +450,37 @@ const App = () => {
           <h1>FLAGGING BILLING/INFORMATION SHEET</h1>
           <h3>*Please complete <i>ALL JOB</i> INFO</h3>
         </div> */}
+        <div class="client-company">
+        <TextField
+            value={formData.clientCompany}
+            onChange={handleInputChange}
+            select
+            label="Client Company"
+            inputProps={
+              {
+                name: 'clientCompany',
+                id: 'clientCompany'
+              }
+            }
+            className='dropdown'
+            required
+          >
+            <MenuItem value={'S.E.C.'}>S.E.C.</MenuItem>
+            <MenuItem value={'Piedmont-Duke Energy'}>Piedmont-Duke Energy</MenuItem>
+            <MenuItem value={'UCLS'}>UCLS</MenuItem>
+            <MenuItem value={'Other'}>Other</MenuItem>
+          </TextField>
+          {formData.clientCompany === 'Other' && <TextField
+            type="text"
+            vairant="outlined"
+            color="secondary"
+            label="Other Client Company"
+            name="otherClientCompany"
+            value={formData.otherClientCompany}
+            onChange={handleInputChange}
+            required
+          />}
+        </div>
         <section className='team-lead'>
           <TextField
             type="text"
@@ -472,7 +506,7 @@ const App = () => {
           />
         </section>
         <section class="sec">
-          <h3 class="section-title">S.E.C.</h3>
+          {/* <h3 class="section-title">S.E.C.</h3> */}
           <Stack spacing={2} direction="row" sx={{marginBottom: 4}}>
             <TextField
               type="text"

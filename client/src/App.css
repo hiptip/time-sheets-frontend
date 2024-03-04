@@ -64,13 +64,14 @@ form {
   width: 700px;
   /* border: 1px solid black; */
   padding: 5px;
+  /* pad inbetween items */
   display: flex;
   /* justify-content: center; */
   flex-direction: column;
   /* align-items: center; */
   /* width: auto; */
   /* center on page */
-  margin: 0 auto;
+  margin: auto;
   /* center the title */
   & > h3 {
     text-align: center;
@@ -142,4 +143,15 @@ form {
 
 .dropdown {
   width: 200px;
+  /* center horizontally */
+  margin: 0 auto;
+}
+
+.client-company {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
 }
