@@ -403,12 +403,12 @@ const App = () => {
       ...prevFormData,
       date: formattedDate,
     }));
-    // determine day from date
-    const day = dayjs(date).format('dddd');
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      day,
-    }));
+    // determine weekday from date
+    // const day = dayjs(date).format('dddd');
+    // setFormData((prevFormData) => ({
+    //   ...prevFormData,
+    //   day,
+    // }));
 
     // send to local api at port 3001
     // fetch('https://7ctna56fk6.execute-api.us-east-1.amazonaws.com/prod/', {
@@ -542,6 +542,7 @@ const App = () => {
                   setFormData((prevFormData) => ({
                     ...prevFormData,
                     date: newValue,
+                    day: dayjs(newValue).format('dddd')
                   }));
                 }
                 }
