@@ -468,6 +468,9 @@ const App = () => {
             <MenuItem value={'S.E.C.'}>S.E.C.</MenuItem>
             <MenuItem value={'Piedmont-Duke Energy'}>Piedmont-Duke Energy</MenuItem>
             <MenuItem value={'UCLS'}>UCLS</MenuItem>
+            <MenuItem value={'Greensboro Building Services'}>Greensboro Building Services</MenuItem>
+            <MenuItem value={'Windsor Commercial'}>Windsor Commercial</MenuItem>
+            <MenuItem value={'MEARS'}>MEARS</MenuItem>
             <MenuItem value={'Other'}>Other</MenuItem>
           </TextField>
           {formData.clientCompany === 'Other' && <TextField
@@ -568,7 +571,9 @@ const App = () => {
               required
             />
           </Stack>
-          <Stack spacing={2} direction="row" sx={{marginBottom: 4}}>
+
+          {formData.clientCompany != 'Windsor Commercial' && formData.clientCompany != 'MEARS' && (
+           <Stack spacing={2} direction="row" sx={{marginBottom: 4}}>
             <TextField
               type="text"
               vairant="outlined"
@@ -585,7 +590,7 @@ const App = () => {
               type="text"
               vairant="outlined"
               color="secondary"
-              label="Maximo #"
+              label={formData.clientCompany === 'S.E.C.' ? "Maximo #" : "PO #"}
               name="maximo"
               value={formData.maximo}
               onChange={handleInputChange}
@@ -593,6 +598,7 @@ const App = () => {
               required
             />
           </Stack>
+          )}
         </section>
         <section class="equipment">
           <h3 class="section-title">ADDITIONAL EQUIPMENT NEEDED</h3>
