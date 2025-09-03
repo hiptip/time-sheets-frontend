@@ -403,6 +403,7 @@ const App = () => {
     setFormData((prevFormData) => ({
       ...prevFormData,
       date: formattedDate,
+      day: dayjs(date).format('dddd')
     }));
     // determine day from date
     const day = dayjs(date).format('dddd');
