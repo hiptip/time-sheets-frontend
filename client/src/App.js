@@ -580,13 +580,13 @@ const App = () => {
             />
           </Stack>
 
-          {formData.clientCompany != 'Windsor Commercial' && formData.clientCompany != 'MEARS' && (
+          {formData.clientCompany != 'Windsor Commercial' && (
            <Stack spacing={2} direction="row" sx={{marginBottom: 4}}>
             <TextField
               type="text"
               vairant="outlined"
               color="secondary"
-              label="Job #"
+              label={formData.clientCompany === 'MEARS' ? "WO #" : "Job #"}
               name="job"
               value={formData.job}
               onChange={handleInputChange}
