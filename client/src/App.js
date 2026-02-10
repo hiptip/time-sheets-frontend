@@ -1,8 +1,7 @@
 import { useState, useRef } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import dayjs, { Dayjs } from 'dayjs';
-import { TextField, Button, Container, Stack, Date, TextareaAutosize, Select, MenuItem, InputLabel } from '@mui/material';
+import dayjs from 'dayjs';
+import { TextField, Button, Stack, TextareaAutosize, MenuItem } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -212,11 +211,13 @@ const EmployeeTable = ({employees, setFormData}) => {
             <TableCell>Start Time</TableCell>
             <TableCell>End Time</TableCell>
             <TableCell>Flagger Initials</TableCell>
-            <TableCell>Client Initials</TableCell>
+              <TableCell>Client Initials</TableCell>
           </TableRow>
+        </TableHead>
+        <TableBody>
           {/* for each employee in employees create a row */}
           {employees.map((employee) => (
-            <TableRow>
+            <TableRow key={employee.id}>
               <CustomTableCellText id={employee.id} column="name" employees={employees} setFormData={setFormData} />
               <CustomTableCellTime id={employee.id} column="startTime" employees={employees} setFormData={setFormData} />
               <CustomTableCellTime id={employee.id} column="endTime" employees={employees} setFormData={setFormData} />
@@ -224,7 +225,7 @@ const EmployeeTable = ({employees, setFormData}) => {
               <CustomTableCellText id={employee.id} column="clientInitials" employees={employees} setFormData={setFormData} size="small" />
             </TableRow>
           ))}
-        </TableHead>
+        </TableBody>
       </Table>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Button onClick={() => addEmployee(employees, setFormData)}>Add Employee</Button>
@@ -236,7 +237,7 @@ const EmployeeTable = ({employees, setFormData}) => {
 
 const EquipmentRow = ({ equipment, allEquipment, setFormData }) => {
   return (
-    <div class="content" style={{padding: "10px"}}>
+    <div className="content" style={{padding: "10px"}}>
       {/* <TextField
         type="text"
         vairant="outlined"
@@ -288,10 +289,14 @@ const EquipmentRow = ({ equipment, allEquipment, setFormData }) => {
         }
         className='dropdown'
       >
-        <MenuItem value={1}>1</MenuItem>
-        <MenuItem value={2}>2</MenuItem>
-        <MenuItem value={3}>3</MenuItem>
-        <MenuItem value={4}>4</MenuItem>
+        {Array.from({ length: 20 }, (_, index) => {
+          const qty = index + 1;
+          return (
+            <MenuItem key={qty} value={qty}>
+              {qty}
+            </MenuItem>
+          );
+        })}
       </TextField>
       {/* <TextField
               type="text"
@@ -443,17 +448,17 @@ const App = () => {
   return (
     loading ? <LoadingScreen /> : submitted ? <SubmittedScreen /> :
     <form onSubmit={handleSubmit}>
-      <header>
-        {/* <img src="logo.png" alt="My logo" class="logo" />
-        <div class="team-lead"></div> */}
+      <header className="header">
+        <h1>Flagging Billing / Information Sheet</h1>
+        <p>Please complete all job info and billing hours.</p>
       </header>
       <main>
         {/* <div class="title">
           <h1>FLAGGING BILLING/INFORMATION SHEET</h1>
           <h3>*Please complete <i>ALL JOB</i> INFO</h3>
         </div> */}
-        <div class="client-company">
-        <TextField
+        <div className="client-company">
+          <TextField
             value={formData.clientCompany}
             onChange={handleInputChange}
             select
@@ -486,7 +491,7 @@ const App = () => {
             required
           />}
         </div>
-        <section className='team-lead'>
+        <section className="team-lead">
           <TextField
             type="text"
             vairant="outlined"
@@ -510,7 +515,7 @@ const App = () => {
             required
           />
         </section>
-        <section class="sec">
+        <section className="sec">
           {/* <h3 class="section-title">S.E.C.</h3> */}
           <Stack spacing={2} direction="row" sx={{marginBottom: 4}}>
             <TextField
@@ -603,20 +608,20 @@ const App = () => {
           </Stack>
           )}
         </section>
-        <section class="equipment">
-          <h3 class="section-title">ADDITIONAL EQUIPMENT NEEDED</h3>
+        <section className="equipment">
+          <h3 className="section-title">Additional Equipment Needed</h3>
           {formData.equipment.map((equipment) => (
-            <EquipmentRow equipment={equipment} allEquipment={formData.equipment} setFormData={setFormData}/>
+            <EquipmentRow key={equipment.id} equipment={equipment} allEquipment={formData.equipment} setFormData={setFormData}/>
           ))}
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Button onClick={() => addEquipment(formData.equipment, setFormData)}>Add Equipment</Button>
             <Button onClick={() => removeEquipment(formData.equipment, setFormData)} style={{ marginLeft: '10px' }}>Remove Equipment</Button>
           </div>
         </section>
-        <section class="employees">
+        <section className="employees">
           <EmployeeTable employees={formData.employees} setFormData={setFormData}/>
         </section>
-        <section class="comments">
+        <section className="comments">
           <p>Comment(s):</p>
           <TextareaAutosize
             minRows={3}
@@ -624,10 +629,10 @@ const App = () => {
             name="comment"
             value={formData.comment}
             onChange={handleInputChange}
-            style={{ width: "100%" }}
+            className="comment-box"
           />
         </section>
-        <p id='notice'><b>**By signing below, you are agreeing to the above billing hours. Contact your immediate supervisor with any concerns.**</b></p>
+        <p id="notice"><strong>By signing below, you are agreeing to the above billing hours. Contact your immediate supervisor with any concerns.</strong></p>
         <section className="signatures">
           <div id="client">
             <TextField
